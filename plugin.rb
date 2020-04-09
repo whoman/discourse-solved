@@ -313,15 +313,20 @@ SQL
 
       accepted_solutions = TopicCustomField.where(name: "accepted_answer_post_id")
 
-      if report.respond_to?(:add_filter)
-        category_filter = report.filters.dig(:category)
-        report.add_filter('category', default: category_filter)
-        if category_filter
-          accepted_solutions = accepted_solutions.joins(:topic).where("topics.category_id IN (?)", Category.subcategory_ids(category_filter.to_i))
-        end
-      else
-        if report.category_id
-          accepted_solutions = accepted_solutions.joins(:topic).where("topics.category_id IN (?)", Category.subcategory_ids(report.category_id.to_i))
+      category_filter = report.filters.dig(:category)
+      include_subcategories_filter = ActiveModel::Type::Boolean.new.cast(report.filters.dig(:include_subcategories))
+      report.add_filter('category', default: category_filter)
+      report.add_filter('include_subcategories')
+
+      if category_filter
+        if include_subcategories_filter
+          accepted_solutions = accepted_solutions
+            .joins(:topic)
+            .where("topics.category_id IN (?)", Category.subcategory_ids(category_filter.to_i))
+        else
+          accepted_solutions = accepted_solutions
+            .joins(:topic)
+            .where("topics.category_id = ?", category_filter)
         end
       end
 

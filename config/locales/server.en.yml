@@ -16,7 +16,7 @@ en:
     no_solutions:
       self: "You have no accepted solutions yet."
       others: "No accepted solutions."
-  
+
   badges:
     helpdesk:
       name: "Helpdesk"

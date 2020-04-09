@@ -34,6 +34,11 @@ en:
           solved: "are solved"
 
     admin:
+      dashboard:
+        reports:
+          filters:
+            include_subcategories:
+              label: "Include Subcategories"
       web_hooks:
         solved_event:
           name: "Solved Event"
